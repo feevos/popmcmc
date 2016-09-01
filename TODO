@@ -1,0 +1,8 @@
+1. Modify algos/* so as not to have so many mcmc_algo_*.hpp files: Use templates for the different steppers (standard / pt) 
+	Example something lig template < T1, T2 > evolve_single(Population, Pop_copy,T1 stepper, T2 mh_ratio) or something like this 
+
+2. Add combo stepper+mh accept/reject 
+
+3. Add variable names in the header of the mcmc chains file for the case of txt output. 
+
+4. Add simple python analysis tool. 
