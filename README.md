@@ -1,4 +1,4 @@
-# popmcmc-
+# popmcmc++
 Population mcmc c++ library.
 
 This is a population mcmc c++ library. It incorporates basically 4 algorithms, 3 reliable and tested. 
