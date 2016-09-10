@@ -12,20 +12,13 @@ DEPENDS: intel TBB.
 The library is fully parallelized using intel TBB library. There is the option of selecting number of threads, 
 or running in single thread mode. 
 
-<<<<<<< HEAD
-Jumping in the examples directory should get you started easily. 
 
 The only file that you need to check to understand how the library works is mcmc.hpp, it should be kind (-ish) self explanatory. 
 =======
 Jumping in the examples directory should get you started easily. The algorithm outputs variable chains and last columnt has loglikelihood values. Start with example Rosenbrock, it's better documented than others. Example multiv_gaussian has also an experimental implementation of combo stepper, needs debugging (on my TODO list), avoid using it. 
 
 The only file that you need to check to understand how the library works is mcmc.hpp, it should be kind (-ish) self explanatory.  
->>>>>>> d8f9499b8f2aa448e0471dbda19aa547de26aea3
 
 Promise I'll add proper documentation quite soon. 
 
 compile: g++ -std=c++14 main.cpp -o main -ltbb 
-<<<<<<< HEAD
-=======
-
->>>>>>> d8f9499b8f2aa448e0471dbda19aa547de26aea3
