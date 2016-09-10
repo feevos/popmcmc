@@ -56,7 +56,7 @@ class popmcmc final {
 	private: 
 		bool algo_set; 
 		bool algo_alloc; 
-		/**< Does the evolution for a single generation */
+		/**< Does the evolution for all  generations */
 		base::mcmc_algo_base * myalgo; 
 
 
