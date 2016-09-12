@@ -61,7 +61,9 @@ class DES_PCX_stepper{
 template <class T>
 DES_PCX_stepper<T>::DES_PCX_stepper(vector<double> &_weights, std::vector<std::vector<double> > &_PriorRange, const int &_Nvars, const int &_Npop, int _mu):weights(_weights){
 	stepper1 = new DES_stepper<T>(_Nvars,_Npop);
-	stepper3 = new PCX_stepper<T>(_PriorRange,_Nvars,_Npop,_mu);
+	stepper3 = new PCX_stepper<T>(_Nvars,_Npop);
+	
+	stepper3->set_PriorRange(_PriorRange);
 	
 	Nweights = static_cast<int> (weights.size());
 

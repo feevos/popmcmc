@@ -1,6 +1,7 @@
 #include "../../mcmc.hpp"
 //#include "../../steppers/DES_GWS_PCX_combo_stepper.hpp"
 #include "../../steppers/DES_PCX_combo_stepper.hpp"
+#include "../../mh_ratios/std_mh_pt.hpp"
 
 #include <cmath>
 #include <chrono>
@@ -111,15 +112,17 @@ int main(){
 	
 	mcmc::popmcmc<mult_gaussian> mysampler(logP,PriorRange);
 
-	mysampler.set_algo(mcmc::PCX);
+	//mysampler.set_algo(mcmc::PCX);
 	//mysampler.set_algo(mcmc::GW_Stretch);
 	//mysampler.set_algo(mcmc::DES);
 
 	
-	mysampler.init(Npop);  
+	//mysampler.init(Npop);  
+
 
 
 /*
+	// ********************************** NEEDS DEBUGGING DOES NOT WORK ***************************************
 	// -------------------------------------------------------------------------------------------------------+
 	//													//|
 	//	Constructing custom stepper(DES_PCX_combo) 							//|
@@ -140,6 +143,7 @@ int main(){
 														//|
 	// -------------------------------------------------------------------------------------------------------+
 */
+
 
 
 
@@ -166,12 +170,16 @@ int main(){
 	for (auto i=0; i < Nbeta; ++i)
 		beta[i] = double (i) / double (Nbeta-1); 
 
-	mcmc::mh_ratios::std_mh_pt my_mh(beta,Npop,Nswaps); 								//|
+	mcmc::mh_ratios::std_mh my_mh; 								//|
 	// Custom Algo													//|
-	algos::mcmc_algo_pcx_pt<mult_gaussian,stepper,mh_ratios::std_mh_pt> myalgo(mypop,&mystepper,&my_mh,Nswaps);	//|
+	algos::mcmc_algo_pcx_pt<mult_gaussian,stepper,mh_ratios::std_mh> myalgo(mypop,&mystepper,&my_mh,Nswaps);	//|
 	mysampler.set_algo(&myalgo);											//|
 															//|
 	// -------------------------------------------------------------------------------------------------------+
+
+
+
+	
 
 
 

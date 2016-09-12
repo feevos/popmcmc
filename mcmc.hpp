@@ -42,9 +42,11 @@
 #include "population/pop_pt.hpp"
 #include "algos/mcmc_algo.hpp"
 #include "algos/mcmc_algo_pt.hpp"
-// ---------- PCX experimental ----------
+
+// ---------- *** PCX experimental *** ----------
 #include "algos/mcmc_algo_pcx.hpp"
 #include "algos/mcmc_algo_pcx_pt.hpp"
+// ----------------------------------------------
 
 
 namespace mcmc{
@@ -83,14 +85,14 @@ class popmcmc final {
 
 		/**< Initializer of population */
 		void init(std::string &flname_read); /**< Initiate population directly from file */ 
-		void init(int &_Npop); /**< Random initializer */
+		void init(int &_Npop); 		/**< Random initializer */
 		void init(int &_Npop, mcmc::individual &_myIndiv);
 		void init(std::vector<mcmc::individual> &_pop_vec);  /**< Start from known population */ 
 		void init(int &_Npop, std::vector<mcmc::individual> &_pop_vec);  // Initiate using all of _pop vector, and complete difference Npop - _pop.size() with random initiates Npop > _pop.size()
 
 
 
-		/**< Parallel tempering constructors */
+		/**< Parallel tempering constructors, similar as above but for various temperature chains */
 		void init(std::string &flname_read,int dim_T, int Nswap); 
 		void init(int &_Npop,int dim_T, int Nswap); /**< Random initializer - PT  */
 		void init(std::vector<std::vector<mcmc::individual> > &_pop_pt_vec, int dim_T, int Nswap);  /**< Start from known population - PT*/ 
@@ -103,13 +105,13 @@ class popmcmc final {
 
 
 		void set_algo(string _ALGO_NAME); 
-		void set_algo(base::mcmc_algo_base * _myalgo); /**< constructor for arbitrary mcmc algo. */		
+		void set_algo(base::mcmc_algo_base * _myalgo); /**< constructor for custom mcmc algo. */		
 
 		void set_flname_out(string &_flname_out, int _write_binary=0); /* Set output filename */
 		
 		// All sampling will be done in parallel 
-		void sample_single(int &Nsteps); /**< Sample till death */ 
-		void sample(int &Nsteps); /**< Sample till death in parallel */ 
+		void sample_single(int &Nsteps); /**< Sample with single thread, without TBB*/ 
+		void sample(int &Nsteps); /**< Sample till Nsteps, in parallel  */ 
 
 
 };
@@ -124,7 +126,7 @@ void popmcmc<logLkhood>::initiate_algo ( mcmc::population::pop<logLkhood> &mypop
 	typedef steppers::template GW_Stretch_stepper< mcmc::individual>  GWS_stepper; 
 	typedef mh_ratios::GW_Stretch_mh GWS_mh_ratio; 
 
-	myalgo = new  mcmc::algos::mcmc_algo<logLkhood,GWS_stepper,GWS_mh_ratio>( mypop ); // This refers to the population inheritance 
+	myalgo = new  mcmc::algos::mcmc_algo<logLkhood,GWS_stepper,GWS_mh_ratio>( mypop ); 
 	algo_alloc = true; 
 
 	}else if (ALGO_NAME == DES ){
@@ -243,7 +245,6 @@ void popmcmc<logLkhood>::initiate_algo_pt ( mcmc::population::pop_pt<logLkhood> 
 
 
 
-
 template <class logLkhood> 
 popmcmc<logLkhood>::popmcmc( logLkhood _logP, vector<vector<double> > &_PriorRange, int Nthread ):logP(_logP)
 	{
@@ -282,9 +283,8 @@ popmcmc<logLkhood>::~popmcmc(){
 }
 
 
+
 /**< Initializer of population */
-
-
 template <class logLkhood> 
 void popmcmc<logLkhood>::init(int &_Npop){
 	mcmc::population::pop<logLkhood> mypop(logP,PriorRange); 
@@ -348,7 +348,6 @@ void popmcmc<logLkhood>::init(int &_Npop,int  dim_T,int Nswap ){
 
 
 
-/**< Start from known population - PT*/ 
 template <class logLkhood> 
 void popmcmc<logLkhood>::init(std::vector<std::vector<mcmc::individual> > &_pop_pt_vec,int dim_T,  int Nswap){
 
@@ -358,7 +357,6 @@ void popmcmc<logLkhood>::init(std::vector<std::vector<mcmc::individual> > &_pop_
 }
 
 
-/**< Start from known population - PT*/ 
 template <class logLkhood> 
 void popmcmc<logLkhood>::init(int &_Npop, mcmc::individual &_myIndiv,int dim_T,  int Nswap){
 
@@ -370,7 +368,6 @@ void popmcmc<logLkhood>::init(int &_Npop, mcmc::individual &_myIndiv,int dim_T, 
 
 
 
-/**< Start from known population - PT*/ 
 template <class logLkhood> 
 void popmcmc<logLkhood>::init(int &_Npop, std::vector<std::vector<mcmc::individual> > &_pop_pt_vec,int dim_T , int Nswap){
 	mcmc::population::pop_pt<logLkhood> mypop_pt(logP,PriorRange,dim_T); 
@@ -382,9 +379,6 @@ void popmcmc<logLkhood>::init(int &_Npop, std::vector<std::vector<mcmc::individu
 
 
 
-/**
-	This is the constructor of various algorithms 
-*/
 template <class logLkhood> 
 void popmcmc<logLkhood>::set_algo( string _ALGO_NAME)
 	{	ALGO_NAME = _ALGO_NAME;
@@ -409,9 +403,8 @@ void popmcmc<logLkhood>:: set_flname_out(string &_flname_out, int _write_binary 
 
 
 
-
 template <class logLkhood> 
-void popmcmc<logLkhood>::sample_single(int &Nsample) /**< Sample till death */ 
+void popmcmc<logLkhood>::sample_single(int &Nsample) /**< Sample till Nsample, single thread without tbb usage */ 
 	{
 	
 	myalgo->sample_single(Nsample);
@@ -420,7 +413,7 @@ void popmcmc<logLkhood>::sample_single(int &Nsample) /**< Sample till death */
 
 	
 template <class logLkhood> 
-void popmcmc<logLkhood>::sample(int &Nsample) /**< Sample till death */ 
+void popmcmc<logLkhood>::sample(int &Nsample) /**< Sample till Nsample in parallel (tbb) */ 
 	{
 	myalgo->sample(Nsample);
 }

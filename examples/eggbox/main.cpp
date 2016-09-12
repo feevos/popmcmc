@@ -62,8 +62,8 @@ int main(){
 
 	
 	auto t1=std::chrono::high_resolution_clock::now();
-	//mysampler.sample(Nsample); 
-	mysampler.sample(Nsample,8);  // parallel version 
+	//mysampler.sample_single(Nsample); 
+	mysampler.sample(Nsample);  // parallel version 
 	auto t2=std::chrono::high_resolution_clock::now();
         auto Dt = t2-t1;
 

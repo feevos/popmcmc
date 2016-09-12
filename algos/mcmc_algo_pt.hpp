@@ -32,7 +32,7 @@ namespace algos{
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
-class mcmc_algo_pt: public  mcmc::base::mcmc_algo_base { /**< This inheritance is use to declare type of CRTP classes as members */
+class mcmc_algo_pt: public  mcmc::base::mcmc_algo_base { 
 
 	typedef  mcmc::population::pop_pt<LogLkhood> mcmc_pop; 
 	
@@ -106,9 +106,8 @@ class mcmc_algo_pt: public  mcmc::base::mcmc_algo_base { /**< This inheritance i
 		void write();
 
 		// ************************ TBB parallelized routines **********************************************
-		void evolve_single(); /**< Evolves the population P for a single generation */ 
+		void evolve_single(); /**< Evolves the population P for a single generation, 1 thread without TBB */ 
 		void evolve(); /**< Evolves the population P for a single generation using Nthreads */ 
-		//void evolve(std::vector<double> &beta, int Nthreads); // Evolves using parallel tempering  for a single generation  // This will probably go in a different algorithm: I need different population.  
 		// *************************************************************************************************
 
 		std::vector<std::vector<mcmc::individual> >get_pop()
@@ -117,8 +116,7 @@ class mcmc_algo_pt: public  mcmc::base::mcmc_algo_base { /**< This inheritance i
 			} 
 
 
-		// All sampling will be done in parallel 
-		void sample_single(int &Nsteps); /**< Sample till death */ 
+		void sample_single(int &Nsteps); /**< Sample till death, one thread -- no TBB   */ 
 		void sample(int &Nsteps); /**< Sample till death in parallel */ 
 
 };
@@ -148,7 +146,7 @@ void mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::swap(std::vector<std::vector<
 	double logM =  (_beta[TT] - _beta[TT2]) * ( P[TT2][jj].loglkhood - P[TT][jj2].loglkhood );		
 
 
-	if(swaplogratio<=logM){ // swap temperatures. 
+	if(swaplogratio<=logM){ // swap temperatures / chains . 
 	std::swap(P[TT2][jj],P[TT][jj2]);  
 	}
 	};// End of IF Swap proposal. 
@@ -164,7 +162,7 @@ void mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::write_txt() {/* Writes variab
 
 
 	// a. Find temperature: beta[T]==1; 
-	//auto pos = std::find(beta.begin(),beta.end(),Tref);
+	//auto pos = std::find(beta.begin(),beta.end(),Tref); -- deprecated 
 	for (auto i=0; i < Npop; ++i)
 		{
 		for (auto j=0; j < Nvars; ++j)
@@ -181,8 +179,6 @@ void mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::write_txt() {/* Writes variab
 
 template<class LogLkhood,class stepper, class mh_ratio >
 void mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::write_binary(){/* Writes variables, loglkhood, accept/ratio in flname_out */
-
-	// a. Find temperature: beta[T]==1; 
 
 	double val; 
 	for (int i=0; i <Npop; ++i)
@@ -321,10 +317,8 @@ void mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::evolve_single(){
 	
 	}
 
-	// *******************************************************************************************************
 
 
-		// Update population -- SLOW operation, would love to avoid it.  
 		update();  // Copies values of tP_1 <-- tP_2
 
 	
@@ -333,21 +327,9 @@ void mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::evolve_single(){
 
 
 
-
-/**
-This is the most important function of the algorithm. It is the SAME independent of algorithmic structure. ***** So it should NOT repeated.***** 
-
-*/
-
 template<class LogLkhood,class stepper, class mh_ratio >
 void mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::evolve(){
 
-/*	
-  	tbb::task_scheduler_init init;  // Automatic number of threads
-	if (Nthreads >=1){
-		init.initialize(Nthreads); 
-	}
-*/	
 
 	auto  evolve_par = [&](tbb::blocked_range2d<int> &r)->void{
 
@@ -392,7 +374,6 @@ void mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::evolve(){
 	tbb::parallel_for(tbb::blocked_range2d<int>(0,dim_T,0,Npop), evolve_par , ap);
 
 
-	// Update population -- SLOW operation, would love to avoid it.  
 	update();  // Copies values of tP_1 <-- tP_2
 
 
@@ -407,7 +388,7 @@ void mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::evolve(){
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
-void mcmc_algo_pt<LogLkhood,stepper,mh_ratio>::sample_single(int &Nsteps) /**< Sample till death */ 
+void mcmc_algo_pt<LogLkhood,stepper,mh_ratio>::sample_single(int &Nsteps) 
 	{
 	if (flname_set == true ){
 	for (auto i=0; i < Nsteps; ++i)

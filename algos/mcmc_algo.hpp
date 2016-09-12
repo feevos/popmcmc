@@ -32,7 +32,7 @@ namespace algos{
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
-class mcmc_algo: public mcmc::base::mcmc_algo_base { /**< This inheritance is use to declare type of CRTP classes as members */
+class mcmc_algo: public mcmc::base::mcmc_algo_base { 
 
 	typedef  mcmc::population::pop<LogLkhood> mcmc_pop; 
 	
@@ -86,9 +86,8 @@ class mcmc_algo: public mcmc::base::mcmc_algo_base { /**< This inheritance is us
 
 
 		// ************************ TBB parallelized routines **********************************************
-		void evolve_single(); /**< Evolves the population P for a single generation */ 
+		void evolve_single(); /**< Evolves the population P for a single generation, uses 1 thread without TBB  */ 
 		void evolve(); /**< Evolves the population P for a single generation using Nthreads */ 
-		//void evolve(std::vector<double> &beta, int Nthreads); // Evolves using parallel tempering  for a single generation  // This will probably go in a different algorithm: I need different population.  
 		// *************************************************************************************************
 
 
@@ -101,15 +100,14 @@ class mcmc_algo: public mcmc::base::mcmc_algo_base { /**< This inheritance is us
 
 
 		
-		// All sampling will be done in parallel 
-		void sample_single(int &Nsteps); /**< Sample till death */ 
-		void sample(int &Nsteps); /**< Sample till death in parallel */ 
+		void sample_single(int &Nsteps); /**< Sample till death, one thread */ 
+		void sample(int &Nsteps); /**< Sample till death in parallel, parallel TBB */ 
 
 
 };
 
 template<class LogLkhood,class stepper, class mh_ratio >
-void mcmc_algo<LogLkhood, stepper,  mh_ratio >::write_txt() {/* Writes variables, loglkhood, accept/ratio in flname_out */
+void mcmc_algo<LogLkhood, stepper,  mh_ratio >::write_txt() {/* Writes variables, loglkhood, accept/reject in flname_out */
 
 
 	for (auto i=0; i < Npop; ++i)
@@ -127,7 +125,7 @@ void mcmc_algo<LogLkhood, stepper,  mh_ratio >::write_txt() {/* Writes variables
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
-void mcmc_algo<LogLkhood, stepper,  mh_ratio >::write_binary(){/* Writes variables, loglkhood, accept/ratio in flname_out */
+void mcmc_algo<LogLkhood, stepper,  mh_ratio >::write_binary(){/* Writes variables, loglkhood, accept/reject in flname_out  -- BINARY */
 
 
 	double val; 
@@ -255,8 +253,6 @@ void mcmc_algo<LogLkhood, stepper,  mh_ratio >::evolve_single(){
 	
 	// *******************************************************************************************************
 
-
-		// Update population -- SLOW operation, would love to avoid it.  
 		update();  // Copies values of tP_1 <-- tP_2
 
 	
@@ -266,10 +262,6 @@ void mcmc_algo<LogLkhood, stepper,  mh_ratio >::evolve_single(){
 
 
 
-/**
-This is the most important function of the algorithm. It is the SAME independent of algorithmic structure. ***** So it should NOT repeated.***** 
-
-*/
 
 template<class LogLkhood,class stepper, class mh_ratio >
 void mcmc_algo<LogLkhood, stepper,  mh_ratio >::evolve(){
@@ -315,7 +307,6 @@ void mcmc_algo<LogLkhood, stepper,  mh_ratio >::evolve(){
 	tbb::parallel_for(tbb::blocked_range<int>(0,Npop), evolve_par , ap);
 
 
-	// Update population -- SLOW operation, would love to avoid it.  
 	update();  // Copies values of tP_1 <-- tP_2
 
 }
@@ -324,7 +315,7 @@ void mcmc_algo<LogLkhood, stepper,  mh_ratio >::evolve(){
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
-void mcmc_algo<LogLkhood,stepper,mh_ratio>::sample_single(int &Nsteps) /**< Sample till death */ 
+void mcmc_algo<LogLkhood,stepper,mh_ratio>::sample_single(int &Nsteps) 
 	{
 	if (flname_set == true ){
 	for (auto i=0; i < Nsteps; ++i)
@@ -347,7 +338,7 @@ void mcmc_algo<LogLkhood,stepper,mh_ratio>::sample_single(int &Nsteps) /**< Samp
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
-void mcmc_algo<LogLkhood,stepper,mh_ratio>::sample(int &Nsteps) /**< Sample till death */ 
+void mcmc_algo<LogLkhood,stepper,mh_ratio>::sample(int &Nsteps) 
 	{
 	if (flname_set == true ){
 	for (auto i=0; i < Nsteps; ++i)

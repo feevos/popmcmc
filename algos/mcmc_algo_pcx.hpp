@@ -32,7 +32,7 @@ namespace algos{
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
-class mcmc_algo_pcx: public  mcmc::base::mcmc_algo_base { /**< This inheritance is use to declare type of CRTP classes as members */
+class mcmc_algo_pcx: public  mcmc::base::mcmc_algo_base {
 
 	typedef  mcmc::population::pop<LogLkhood> mcmc_pop; 
 	
@@ -94,7 +94,6 @@ class mcmc_algo_pcx: public  mcmc::base::mcmc_algo_base { /**< This inheritance 
 		// ************************ TBB parallelized routines **********************************************
 		void evolve_single(); /**< Evolves the population P for a single generation */ 
 		void evolve(); /**< Evolves the population P for a single generation using Nthreads */ 
-		//void evolve(std::vector<double> &beta, int Nthreads); // Evolves using parallel tempering  for a single generation  // This will probably go in a different algorithm: I need different population.  
 		// *************************************************************************************************
 
 
@@ -107,7 +106,7 @@ class mcmc_algo_pcx: public  mcmc::base::mcmc_algo_base { /**< This inheritance 
 
 
 		// All sampling will be done in parallel 
-		void sample_single(int &Nsteps); /**< Sample till death */ 
+		void sample_single(int &Nsteps); /**< Sample till death, single thread, no TBB  */ 
 		void sample(int &Nsteps); /**< Sample till death in parallel */ 
 
 };
@@ -178,7 +177,7 @@ mcmc_algo_pcx<LogLkhood, stepper,  mh_ratio >::mcmc_algo_pcx(mcmc_pop &_P ): log
 
 	my_step 		= 	new   stepper(Nvars,Npop);
 
-	// Set PriorRange 
+	// Set PriorRange -- PCX specific 
 	my_step->set_PriorRange(PriorRange);
 
 	my_mh 			= 	new   mh_ratio ;
@@ -251,7 +250,6 @@ void mcmc_algo_pcx<LogLkhood, stepper,  mh_ratio >::evolve_single(){
 
 
 
-	// ********************************* PARALLELIZE TBB ********************************
 	mcmc::individual  tY;
 
 	bool within_PriorRange; 
@@ -284,7 +282,6 @@ void mcmc_algo_pcx<LogLkhood, stepper,  mh_ratio >::evolve_single(){
 		}	
 		}
 	
-	// *******************************************************************************************************
 
 
 		// Update population -- SLOW operation, would love to avoid it.  
@@ -297,10 +294,6 @@ void mcmc_algo_pcx<LogLkhood, stepper,  mh_ratio >::evolve_single(){
 
 
 
-/**
-This is the most important function of the algorithm. It is the SAME independent of algorithmic structure. ***** So it should NOT repeated.***** 
-
-*/
 
 template<class LogLkhood,class stepper, class mh_ratio >
 void mcmc_algo_pcx<LogLkhood, stepper,  mh_ratio >::evolve(){
@@ -347,7 +340,6 @@ void mcmc_algo_pcx<LogLkhood, stepper,  mh_ratio >::evolve(){
 	tbb::parallel_for(tbb::blocked_range<int>(0,Npop), evolve_par , ap);
 
 
-	// Update population -- SLOW operation, would love to avoid it.  
 	update();  // Copies values of tP_1 <-- tP_2
 
 }
@@ -380,7 +372,7 @@ void mcmc_algo_pcx<LogLkhood,stepper,mh_ratio>::sample_single(int &Nsteps) /**< 
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
-void mcmc_algo_pcx<LogLkhood,stepper,mh_ratio>::sample(int &Nsteps) /**< Sample till death */ 
+void mcmc_algo_pcx<LogLkhood,stepper,mh_ratio>::sample(int &Nsteps) 
 	{
 	if (flname_set == true ){
 	for (auto i=0; i < Nsteps; ++i)
@@ -400,9 +392,6 @@ void mcmc_algo_pcx<LogLkhood,stepper,mh_ratio>::sample(int &Nsteps) /**< Sample 
 	}
 	
 }
-
-
-
 
 
 
