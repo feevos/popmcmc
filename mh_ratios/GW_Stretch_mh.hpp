@@ -24,13 +24,12 @@
 
 #include "../globals.h"
 #include "../individual.hpp"
-#include "../base/mh.hpp"
 
 
 namespace mcmc{
 namespace mh_ratios{
 
-class GW_Stretch_mh: public mcmc::base::mh_base< mcmc::individual, GW_Stretch_mh>{
+class GW_Stretch_mh { 
 	private:
 		double tNvars; 
 		double logmh_ratio(mcmc::individual  &Ytp1, mcmc::individual &Xt); /**< MH ratio */

@@ -45,7 +45,7 @@ class PCX_stepper  {
 
 	private:
  	
-		std::vector<std::vector<double> > PriorRange; 
+		std::vector<std::vector<double> > PriorRange; // PriorRange for scaling / rescaling variables
 
 		int Nvars; // Total number of variables  
 		int Npop;  // Population 
@@ -81,8 +81,10 @@ class PCX_stepper  {
 
 
 	public: 
-		PCX_stepper(std::vector<std::vector<double> > &_PriorRange, const int &_Nvars, const int &_Npop, int _mu=5);
+		PCX_stepper(const int &_Nvars, const int &_Npop);
 
+		void set_mu(int &_mu){mu = _mu;}
+		void set_PriorRange(std::vector<std::vector<double> > &_PriorRange){PriorRange = _PriorRange; } /**< Sets PriorRange. If this is not set inside some algo, then it doesn't have default values, sampler will give erroneous results */ 
 
 		/*
 		For a weighted version of mean estimate, I need information of the likelihood function as well. 
@@ -104,8 +106,9 @@ class PCX_stepper  {
 
 
 template <class T>
-PCX_stepper<T>::PCX_stepper(std::vector<std::vector<double> > &_PriorRange, const int &_Nvars, const int &_Npop, int _mu ): PriorRange(_PriorRange), Nvars (_Nvars), Npop(_Npop), mu(_mu) {
+PCX_stepper<T>::PCX_stepper(const int &_Nvars, const int &_Npop ): Nvars (_Nvars), Npop(_Npop) {
 	
+	mu = 5; // Default choice. 
 
 	name = "PCX_stepper"; 
 

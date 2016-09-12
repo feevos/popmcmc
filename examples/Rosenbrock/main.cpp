@@ -46,9 +46,9 @@ int main(){
 
 // ------------- Standard samplers -- must be combined with standard init functions (i.e. non - tempered). 
 
-	//mysampler.set_algo(mcmc::GW_Stretch);
+	mysampler.set_algo(mcmc::GW_Stretch);
 	//mysampler.set_algo(mcmc::DE);
-	mysampler.set_algo(mcmc::DES);
+	//mysampler.set_algo(mcmc::DES);
 	//mysampler.set_algo(mcmc::PCX);
 
 	// Characteristic init functions. See file mcmc.hpp for all constructors.  

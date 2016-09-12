@@ -211,7 +211,7 @@ template<class LogLkhood,class stepper, class mh_ratio >
 mcmc_algo_pt<LogLkhood, stepper,  mh_ratio >::mcmc_algo_pt(mcmc_pop &_P, int _Nswap ): logP(_P.logP)
 	{
 
-	counter 	= 	1.0; 
+	counter 	= 	1; 
 
 	Tref=1.0;
 

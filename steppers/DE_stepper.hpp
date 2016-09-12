@@ -23,7 +23,6 @@
 #include <string>
 
 #include "../globals.h"
-#include "../base/stepper.hpp"
 
 
 namespace mcmc{
@@ -36,7 +35,7 @@ namespace steppers{
 */
 
 template <class T>
-class DE_stepper: public mcmc::base::stepper_base< T, DE_stepper<T> >  {
+class DE_stepper  {
 
 	private:
  

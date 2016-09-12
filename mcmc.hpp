@@ -34,16 +34,16 @@
 
 // Available MH ratios 
 #include "mh_ratios/GW_Stretch_mh.hpp"
-//#include "mh_ratios/GW_Stretch_mh_pt.hpp"
 #include "mh_ratios/std_mh.hpp"
-//#include "mh_ratios/std_mh_pt.hpp"
+
 
 // Population and basic algo information
 #include "population/pop.hpp"
 #include "population/pop_pt.hpp"
 #include "algos/mcmc_algo.hpp"
-#include "algos/mcmc_algo_pcx.hpp"
 #include "algos/mcmc_algo_pt.hpp"
+// ---------- PCX experimental ----------
+#include "algos/mcmc_algo_pcx.hpp"
 #include "algos/mcmc_algo_pcx_pt.hpp"
 
 

@@ -28,10 +28,10 @@ class mcmc_algo_base{
 	public:
 		virtual ~mcmc_algo_base(){}
 
-		virtual void set_flname_out(string & _flname_out, int _write_binary)=0; 
+		virtual void set_flname_out(string & _flname_out, int _write_binary)=0; /**< Set output filename */
 		
-		virtual void sample_single(int &Nsteps)=0;	/**< Sample till death */ 
-		virtual void sample(int &Nsteps)=0; 	/**< Sample till death in parallel */ 
+		virtual void sample_single(int &Nsteps)=0;	/**< Sample using one thread, without TBB */ 
+		virtual void sample(int &Nsteps)=0; 		/**< Sample till Nsteps in parallel */ 
 
 };
 

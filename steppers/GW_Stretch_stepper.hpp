@@ -23,7 +23,6 @@
 #include <string>
 
 #include "../globals.h"
-#include "../base/stepper.hpp"
 
 
 namespace mcmc{
@@ -34,7 +33,7 @@ namespace steppers{
 
 */
 template <class T> 
-class GW_Stretch_stepper: public mcmc::base::stepper_base<T, GW_Stretch_stepper<T> >  {
+class GW_Stretch_stepper  {
 
 	private:
  

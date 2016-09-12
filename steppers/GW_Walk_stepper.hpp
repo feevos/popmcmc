@@ -35,7 +35,7 @@
 #ifndef _GW_Walk_stepper_
 #define _GW_Walk_stepper_
 
-#include "../base/stepper.hpp"
+//#include "../base/stepper.hpp"
 
 
 namespace mcmc{
@@ -45,7 +45,7 @@ namespace mcmc{
 	Ensemble samplers with affine invariance, Goodman&Weare stepper, DOI:  10.2140/camcos.2010.5.65, 2010.  
 
 */
-class GW_Walk_stepper: public stepper_base  {
+class GW_Walk_stepper /* : public stepper_base  */  {
 
 	private:
  

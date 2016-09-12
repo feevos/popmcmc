@@ -38,7 +38,7 @@ namespace population{
 This class does not participate in expensive operations, I can use virtual base class.  
 */
 template < class LogLikelihood> 
-class pop_pt /* :public mcmc::base::pop_base */ { 
+class pop_pt  { 
 	private: 
 		std::vector<std::vector<mcmc::individual> > pop_pt_vec; /**< Parallel tempering approach -once initialized is all we care about */
 	protected:	

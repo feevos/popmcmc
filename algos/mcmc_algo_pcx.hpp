@@ -176,7 +176,10 @@ mcmc_algo_pcx<LogLkhood, stepper,  mh_ratio >::mcmc_algo_pcx(mcmc_pop &_P ): log
 	tP_1 			=	_P.get_pop();  // <---------------------------------
 	tP_2			=	tP_1; 
 
-	my_step 		= 	new   stepper(PriorRange, Nvars,Npop);
+	my_step 		= 	new   stepper(Nvars,Npop);
+
+	// Set PriorRange 
+	my_step->set_PriorRange(PriorRange);
 
 	my_mh 			= 	new   mh_ratio ;
 

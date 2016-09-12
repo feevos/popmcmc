@@ -23,13 +23,12 @@
 
 #include "../globals.h"
 #include "../individual.hpp"
-#include "../base/mh.hpp"
 
 
 namespace mcmc{
 namespace mh_ratios{
 
-class std_mh:public mcmc::base::mh_base<mcmc::individual, std_mh>{ // static polymorphism 
+class std_mh { 
 	private: 
 		double logmh_ratio(mcmc::individual  &Ytp1, mcmc::individual &Xt); 
 		double logmh_ratio(mcmc::individual  &Ytp1, mcmc::individual &Xt,double &beta_T); 

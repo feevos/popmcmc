@@ -24,7 +24,6 @@
 
 
 #include "../globals.h"
-#include "../base/stepper.hpp"
 
 
 namespace mcmc{
@@ -38,7 +37,7 @@ namespace steppers{
 */
 
 template <class T>
-class DES_stepper: public mcmc::base::stepper_base<T, DES_stepper<T> >  {
+class DES_stepper {
 
 	private:
  

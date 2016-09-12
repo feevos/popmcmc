@@ -30,7 +30,6 @@
 #include "../parallel" // Parallelization routines TBB
 #include "../macros.h"
 #include "../globals.h"
-//#include "../base/pop_base.hpp"
 
 namespace mcmc{
 namespace population{
@@ -40,7 +39,7 @@ namespace population{
 This class does not participate in expensive operations, I can use virtual base class. 
 */
 template < class LogLikelihood> 
-class pop  /* :public mcmc::base::pop_base  */{ 
+class pop  { 
 	private: 
 		std::vector<mcmc::individual> pop_vec; /**< Population -once initialized is all we care about */
 	protected:	
