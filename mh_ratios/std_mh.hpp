@@ -59,6 +59,14 @@ double std_mh::logmh_ratio ( mcmc::individual &Ytp1, mcmc::individual &Xt)
 
 
 
+double std_mh::logmh_ratio ( mcmc::individual &Ytp1, mcmc::individual &Xt, double &beta_T)
+	{
+	// This is standard mh ratio 
+	return  
+		beta_T * (Ytp1.loglkhood - Xt.loglkhood);
+}
+
+
 
 bool std_mh::accept(mcmc::individual  &Ytp1, mcmc::individual &Xt)
 	{
@@ -74,6 +82,16 @@ bool std_mh::accept(mcmc::individual  &Ytp1, mcmc::individual &Xt)
 }
 
 
+bool std_mh::accept(mcmc::individual  &Ytp1, mcmc::individual &Xt, double &beta_T)
+	{                    
+	double trialrandom=std::log(mcmc::unif_real(gen)); // Proposed random value. 
+	if (trialrandom <= logmh_ratio( Ytp1, Xt, beta_T) ){
+		return true; 
+	}else {
+		return false; 
+	}
+
+}
 
 
 

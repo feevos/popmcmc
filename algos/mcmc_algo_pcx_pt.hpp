@@ -49,10 +49,24 @@ class mcmc_algo_pcx_pt: public  mcmc::base::mcmc_algo_base { /**< This inheritan
 		vector<vector<double> > PriorRange; 
 		
 		vector<double> beta; 
+		int Nswap; 
 
 		std::vector < std::vector <  mcmc::individual > >  tP_1; /**< Temporary instance of individuals: it is needed for detailed balance, before and after modification */
 		std::vector < std::vector <  mcmc::individual > > tP_2; /**< Temporary instance of individuals: it is needed for detailed balance, before and after modification  */
 	
+
+
+		
+		// ########### SWAP proposal specifics ###############################
+		
+		uniform_int_distribution<> dist_int_beta;  /**< Gives a random integer value for selection of temperature */
+		uniform_int_distribution<> dist_int; 	/**< Selects random population individuals */
+		
+		void swap( std::vector<std::vector<mcmc::individual> > &P,  int &i, vector<double> &_beta);
+
+		// ##################### END SWAP ####################################
+
+
 
 		string flname_out; 
 		ofstream mcmc_out; 
@@ -132,6 +146,40 @@ void mcmc_algo_pcx_pt<LogLkhood, stepper,  mh_ratio >::write_txt() {/* Writes va
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
+void mcmc_algo_pcx_pt<LogLkhood, stepper,  mh_ratio >::swap(std::vector<std::vector<mcmc::individual> > &P,  int &i, vector<double> &_beta){
+
+	if(i%Nswap==0){ // Try it every Nswap steps. 
+
+	// conjugate temperatures to swap 
+	int TT= dist_int_beta(gen); 
+	int TT2=TT+1;
+
+	// Choose two chains at random to swap  
+	int jj = dist_int(gen);
+	int jj2; 
+
+	do {		
+	jj2 = dist_int(gen);
+	}while (jj2==jj);
+
+
+
+	double swaplogratio=log(unif_real(mcmc::gen) );
+	double logM =  (_beta[TT] - _beta[TT2]) * ( P[TT2][jj].loglkhood - P[TT][jj2].loglkhood );		
+
+
+	if(swaplogratio<=logM){ // swap temperatures. 
+	std::swap(P[TT2][jj],P[TT][jj2]);  
+	}
+	};// End of IF Swap proposal. 
+
+
+}
+
+
+
+
+template<class LogLkhood,class stepper, class mh_ratio >
 void mcmc_algo_pcx_pt<LogLkhood, stepper,  mh_ratio >::write_binary(){/* Writes variables, loglkhood, accept/ratio in flname_out */
 
 /*
@@ -183,7 +231,7 @@ void mcmc_algo_pcx_pt<LogLkhood, stepper,  mh_ratio >::write_binary(){/* Writes 
 
 
 template<class LogLkhood,class stepper, class mh_ratio >
-mcmc_algo_pcx_pt<LogLkhood, stepper,  mh_ratio >::mcmc_algo_pcx_pt(mcmc_pop &_P, int Nswap ): logP(_P.logP)
+mcmc_algo_pcx_pt<LogLkhood, stepper,  mh_ratio >::mcmc_algo_pcx_pt(mcmc_pop &_P, int _Nswap ): logP(_P.logP)
 	{
 
 	Tref=1.0;
@@ -192,11 +240,20 @@ mcmc_algo_pcx_pt<LogLkhood, stepper,  mh_ratio >::mcmc_algo_pcx_pt(mcmc_pop &_P,
 	Npop 		=   	_P.get_Npop() ;  // <--------------------------------
 	dim_T		=	_P.get_dim_T() ; // <--------------------------------
 
+	Nswap		=	_Nswap; 
+
 // ################################# Am not using this in here, not necessary  #########################################
 	// Set up temperatures. These can be in future versions different than linear. 
 	beta.resize(dim_T); 
 	for (auto i=0; i < dim_T; ++i)
 		beta[i] = double (i+1) / double (dim_T); 
+
+	
+	std::uniform_int_distribution<>::param_type newParams2(0,dim_T-2);
+	dist_int_beta.param(newParams2); 
+
+	std::uniform_int_distribution<>::param_type newParams3(0,Npop-1);
+	dist_int.param(newParams3); 
 
 
 	PriorRange	=	_P.get_PriorRange();  // <--------------------------------
@@ -205,7 +262,7 @@ mcmc_algo_pcx_pt<LogLkhood, stepper,  mh_ratio >::mcmc_algo_pcx_pt(mcmc_pop &_P,
 	tP_2		=	tP_1; 
 
 	my_step 	= 	new   stepper(PriorRange,Nvars,Npop);
-	my_mh 		= 	new   mh_ratio(beta,Npop,Nswap); // ########################################################### Do I need parentheses or not ? TEST ##################################
+	my_mh 		= 	new   mh_ratio; 
 
 
 }
@@ -405,7 +462,7 @@ void mcmc_algo_pcx_pt<LogLkhood,stepper,mh_ratio>::sample_single(int &Nsteps) /*
                 if(i%int(0.05*Nsteps)==0) 
                         cout<<"Percentage completed  --> "<<100.0*double(i)/double(Nsteps)<<"%" << endl; 
 		evolve_single(); 
-		my_mh->swap(tP_1, i,beta);
+		swap(tP_1, i,beta);
 		write ();
 		}
 	}else {
@@ -428,7 +485,7 @@ void mcmc_algo_pcx_pt<LogLkhood,stepper,mh_ratio>::sample(int &Nsteps) /**< Samp
                 if(i%int(0.05*Nsteps)==0) 
                         cout<<"Percentage completed  --> "<<100.0*double(i)/double(Nsteps)<<"%" << endl; 
 		evolve(); 
-		my_mh->swap(tP_1, i,beta);
+		swap(tP_1, i,beta);
 		write();
 		}
 	}else {

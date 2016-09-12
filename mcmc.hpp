@@ -34,9 +34,9 @@
 
 // Available MH ratios 
 #include "mh_ratios/GW_Stretch_mh.hpp"
-#include "mh_ratios/GW_Stretch_mh_pt.hpp"
+//#include "mh_ratios/GW_Stretch_mh_pt.hpp"
 #include "mh_ratios/std_mh.hpp"
-#include "mh_ratios/std_mh_pt.hpp"
+//#include "mh_ratios/std_mh_pt.hpp"
 
 // Population and basic algo information
 #include "population/pop.hpp"
@@ -186,7 +186,7 @@ void popmcmc<logLkhood>::initiate_algo_pt ( mcmc::population::pop_pt<logLkhood> 
 	if (ALGO_NAME == GW_Stretch_PT ){
 
 	typedef steppers::template GW_Stretch_stepper< mcmc::individual>  GWS_stepper; 
-	typedef mh_ratios::GW_Stretch_mh_pt GWS_mh_ratio; 
+	typedef mh_ratios::GW_Stretch_mh GWS_mh_ratio; 
 
 	myalgo = new  mcmc::algos::mcmc_algo_pt<logLkhood,GWS_stepper,GWS_mh_ratio>( mypop , Nswap); // This refers to the population inheritance 
 	algo_alloc = true; 
@@ -194,7 +194,7 @@ void popmcmc<logLkhood>::initiate_algo_pt ( mcmc::population::pop_pt<logLkhood> 
 	}else if (ALGO_NAME == DES_PT ){
 
 	typedef steppers::template DES_stepper< mcmc::individual>  tDES_stepper; 
-	typedef mh_ratios::std_mh_pt std_mh_ratio; 
+	typedef mh_ratios::std_mh std_mh_ratio; 
 
 	myalgo = new  mcmc::algos::mcmc_algo_pt<logLkhood,tDES_stepper,std_mh_ratio>( mypop , Nswap);
 
@@ -203,7 +203,7 @@ void popmcmc<logLkhood>::initiate_algo_pt ( mcmc::population::pop_pt<logLkhood> 
 
 
 	typedef steppers::template DE_stepper< mcmc::individual>  tDE_stepper; 
-	typedef mh_ratios::std_mh_pt std_mh_ratio; 
+	typedef mh_ratios::std_mh std_mh_ratio; 
 
 
 	myalgo = new  mcmc::algos::mcmc_algo_pt<logLkhood,tDE_stepper,std_mh_ratio>( mypop , Nswap);
@@ -214,7 +214,7 @@ void popmcmc<logLkhood>::initiate_algo_pt ( mcmc::population::pop_pt<logLkhood> 
 
 
 	typedef steppers::template PCX_stepper< mcmc::individual>  tPCX_stepper; 
-	typedef mh_ratios::std_mh_pt std_mh_ratio; 
+	typedef mh_ratios::std_mh std_mh_ratio; 
 
 
 	myalgo = new  mcmc::algos::mcmc_algo_pcx_pt<logLkhood,tPCX_stepper,std_mh_ratio>( mypop , Nswap);

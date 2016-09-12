@@ -34,6 +34,7 @@ class GW_Stretch_mh: public mcmc::base::mh_base< mcmc::individual, GW_Stretch_mh
 	private:
 		double tNvars; 
 		double logmh_ratio(mcmc::individual  &Ytp1, mcmc::individual &Xt); /**< MH ratio */
+		double logmh_ratio(mcmc::individual  &Ytp1, mcmc::individual &Xt,double &beta_T); /**< MH ratio - tempered */
 
 
 	public:
@@ -46,6 +47,7 @@ class GW_Stretch_mh: public mcmc::base::mh_base< mcmc::individual, GW_Stretch_mh
 
 		/**< MH accept_reject for detailed balance */
 		bool accept(mcmc::individual  &Ytp1, mcmc::individual &Xt);
+		bool accept(mcmc::individual  &Ytp1, mcmc::individual &Xt, double & beta_T); /**< tempered version */
 
 
 };
@@ -58,6 +60,12 @@ double GW_Stretch_mh::logmh_ratio ( individual &Ytp1, individual &Xt)
 		(tNvars - 1.)*std::log(Ytp1.Z) + Ytp1.loglkhood - Xt.loglkhood;
 }
 
+double GW_Stretch_mh::logmh_ratio ( individual &Ytp1, individual &Xt,double &beta_T)
+	{
+	tNvars = static_cast<double> (Ytp1.Vars.size());
+	return  
+		beta_T * ((tNvars - 1.)*std::log(Ytp1.Z) + Ytp1.loglkhood - Xt.loglkhood );
+}
 
 
 
@@ -74,6 +82,18 @@ bool GW_Stretch_mh::accept(mcmc::individual  &Ytp1, mcmc::individual &Xt)
 }
 
 
+
+bool GW_Stretch_mh::accept(mcmc::individual  &Ytp1, mcmc::individual &Xt, double &beta_T)
+	{		
+	double trialrandom=std::log(mcmc::unif_real(gen)); // Proposed random value. 
+	if (trialrandom <= logmh_ratio( Ytp1, Xt, beta_T) ){
+		return true; 
+	}else {
+		return false; 
+	}
+
+
+}
 
 
 

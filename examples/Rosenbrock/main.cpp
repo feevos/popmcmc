@@ -48,21 +48,21 @@ int main(){
 
 	//mysampler.set_algo(mcmc::GW_Stretch);
 	//mysampler.set_algo(mcmc::DE);
-	//mysampler.set_algo(mcmc::DES);
+	mysampler.set_algo(mcmc::DES);
 	//mysampler.set_algo(mcmc::PCX);
 
 	// Characteristic init functions. See file mcmc.hpp for all constructors.  
-	//mysampler.init(Npop);   
+	mysampler.init(Npop);   
 // -------------------------------------------------------------------------------------------
 	
 // ---------------- Parallel Tempering algorithms --------------------------------------------
-	mysampler.set_algo(mcmc::GW_Stretch_PT);
+	//mysampler.set_algo(mcmc::GW_Stretch_PT);
 	//mysampler.set_algo(mcmc::DE_PT);
 	//mysampler.set_algo(mcmc::DES_PT);
 	//mysampler.set_algo(mcmc::PCX_PT);
 	
 	// Characteristic init functions. 10: dimension of temperatures, 30: Nswap, propose swap every Nswap iterations. 
-	mysampler.init(Npop,30,30);  
+	//mysampler.init(Npop,10,30);  
 // ------------------------------------------------------------------------------------------	
 
 
