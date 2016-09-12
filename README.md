@@ -1,21 +1,21 @@
 # popmcmc++
 Population mcmc c++ library.
 
-This is a population mcmc c++ library. It incorporates basically 4 algorithms, 3 reliable and tested. 
-DE,DES based on differential evolution- Braak et al. (2006)
-and GWS - Goodman and Weare 2010, the stretch move.  There is also a new experimental one (PCX), 
-inspired from the PCX crossover (Deb et al. 2002). Parallel tempering versions are also provided 
-(Algos: DE_PT, DES_PT, GWS_PT, PCX_PT). 
+This is a population mcmc c++ library. It incorporates 4 algorithms, 3 reliable and tested and one experimental. 
+Tested algorithms: DE,DES based on differential evolution- Braak et al. (2006), Streens 2002 -  
+and GWS (Goodman and Weare 2010), the stretch move.  
 
-DEPENDS: intel TBB. 
+Experimental one (PCX), inspired from the PCX crossover (Deb et al. 2002). Parallel tempering versions are also provided 
+(Algos: DE,DES,GW_Stretch,PCX,DE_PT, DES_PT, GW_Stretch_PT, PCX_PT). 
+
+Dependencies: intel TBB. 
 
 The library is fully parallelized using intel TBB library. There is the option of selecting number of threads, 
-or running in single thread mode. 
+or running in single thread mode, without the use of TBB.  
 
-Jumping in the examples directory should get you started easily. The algorithm outputs variable chains and last columnt has loglikelihood values. Start with example Rosenbrock, it's better documented than others. Example multiv_gaussian has also an experimental implementation of combo stepper, needs debugging (on my TODO list), avoid using it. 
+Jumping in the examples directory should get you started easily. The algorithm outputs variable chains and last column has loglikelihood values. Start with example Rosenbrock, it's better documented than others. Example multiv_gaussian has also an experimental implementation of combo stepper, that *needs debugging* (on my TODO list), *avoid using* it. 
 
-The only file that you need to check to understand how the library works is mcmc.hpp, it should be kind (-ish) self explanatory.  
 
-Promise I'll add proper documentation quite soon. 
+compile: g++ -std=c++14 main.cpp -o main -ltbb -O3 
 
-compile: g++ -std=c++14 main.cpp -o main -ltbb 
+Software tested with gcc 5.4.0  
