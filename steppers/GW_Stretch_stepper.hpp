@@ -37,7 +37,6 @@ class GW_Stretch_stepper  {
 
 	private:
  
-		T propvecx; 
 		int Nvars; // Total number of variables  
 		int Npop;  // Population 
 
@@ -112,8 +111,6 @@ GW_Stretch_stepper<T>::GW_Stretch_stepper(int &_Nvars, int &_Npop):Nvars (_Nvars
 	std::uniform_int_distribution<>::param_type newParams2(0, Npop-1);
 	dis_int.param(newParams2);
 			
-	// Set up proper size of proposed vector	
-	propvecx.Vars.resize(Nvars); 
 
 }
 
@@ -122,6 +119,11 @@ GW_Stretch_stepper<T>::GW_Stretch_stepper(int &_Nvars, int &_Npop):Nvars (_Nvars
 template <class T>
 T GW_Stretch_stepper<T>::propose(std::vector<T> &X, int &j) 
 	{
+
+	
+	// Set up proper size of proposed vector	
+	T propvecx; 
+	propvecx.Vars.resize(Nvars); 
 	
 	// Random walker kk != j 
 	int kk; 

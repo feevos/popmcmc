@@ -41,7 +41,7 @@ class DE_stepper  {
  
 		double epsilon;// (1.e-4);	 
 		double gamma; //= 2.38 *pow(2.0* static_cast<double>(Nparams),-0.5 );
-		T propvecx; 
+
 		int Nvars; // Total number of variables  
 		int Npop;  // Population 
 
@@ -78,7 +78,6 @@ DE_stepper<T>::DE_stepper(const int &_Nvars, const int &_Npop):Nvars (_Nvars), N
 	dis_int.param(newParams2);
 			
 	// Set up proper size of proposed vector, and gamma step 	
-	propvecx.Vars.resize(Nvars); 
 	gamma = 2.38 *pow(2.0* static_cast<double>(Nvars),-0.5 );
 
 }
@@ -88,6 +87,9 @@ template <class T>
 T DE_stepper<T>::propose(std::vector<T> &X, int &j) 
 	{
 	
+	T propvecx; 
+	propvecx.Vars.resize(Nvars); 
+
 	int R1, R2; 
 	do{
 		R1=dis_int(gen);

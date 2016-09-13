@@ -47,9 +47,9 @@ int main(){
 
 // ------------- Standard samplers -- must be combined with standard init functions (i.e. non - tempered). 
 
-	//mysampler.set_algo(mcmc::GW_Stretch);
+	mysampler.set_algo(mcmc::GW_Stretch);
 	//mysampler.set_algo(mcmc::DE);
-	mysampler.set_algo(mcmc::DES);
+	//mysampler.set_algo(mcmc::DES);
 	//mysampler.set_algo(mcmc::PCX);
 
 	// Characteristic init functions. See file mcmc.hpp for all constructors.  
@@ -70,14 +70,14 @@ int main(){
 	// Set filename for output. 
 	//string flname_out = "caramba_PCX"; 
 	//string flname_out = "caramba_PCX_PT"; 
-	//string flname_out = "caramba_GWS_1"; 
+	string flname_out = "caramba_GWS_8"; 
 	//string flname_out = "caramba_GWS_8_Pt"; 
 	//string flname_out = "caramba_GWS"; 
 	//string flname_out = "caramba_DES_8_shuffle"; 
 	//string flname_out = "caramba_GWS_8_shuffle"; 
-	string flname_out = "caramba_DES_8"; 
+	//string flname_out = "caramba_DES_8"; 
 	//string flname_out = "caramba_DES_PT_1"; 
-	//string flname_out = "caramba_DE"; 
+	//string flname_out = "caramba_DE_1"; 
 	//string flname_out = "caramba_DE_PT"; 
 	//string flname_out = "caramba_DES_PT"; 
 	mysampler.set_flname_out(flname_out);

@@ -49,7 +49,6 @@ class GW_Walk_stepper /* : public stepper_base  */  {
 
 	private:
  
-		vector<double> propvecx; 
 		int Nvars; // Total number of variables  
 		int Npop;  // Population 
 
@@ -104,6 +103,11 @@ GW_Walk_stepper::GW_Walk_stepper(const int &_Nvars, const int &_Npop):Nvars (_Nv
 
 vector<double>  GW_Walk_stepper::propose(vector<vector<double> > &X, int &j) 
 	{
+
+	
+	vector<double> propvecx; 
+	propvecx.Vars.resize(Nvars); 
+
 	// Evaluate a set of parent vectors 
 	set<int> idxs;
 	int kk; 

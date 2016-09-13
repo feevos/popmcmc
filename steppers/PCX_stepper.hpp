@@ -49,7 +49,6 @@ class PCX_stepper  {
 
 		int Nvars; // Total number of variables  
 		int Npop;  // Population 
-		T propvecx; 
 
 
 
@@ -123,8 +122,6 @@ PCX_stepper<T>::PCX_stepper(const int &_Nvars, const int &_Npop ): Nvars (_Nvars
 	normal_distribution<>::param_type newParams1(0.0,sigma);
 	gauss.param(newParams1);
 		
-	// Set up proper size of proposed vector, and gamma step 	
-	propvecx.Vars.resize(Nvars); 
 
 
 
@@ -157,6 +154,10 @@ PCX_stepper<T>::PCX_stepper(const int &_Nvars, const int &_Npop ): Nvars (_Nvars
 template <class T>
 T  PCX_stepper<T>::propose(std::vector<T> &P, int &idx_p) 
 	{
+
+	
+	T propvecx; 
+	propvecx.Vars.resize(Nvars); 
 
 	// Assign X[idx_p] to be the PARENT: 
 	vector<double>  Xparent = P[idx_p].Vars;

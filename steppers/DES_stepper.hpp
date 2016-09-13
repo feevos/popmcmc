@@ -41,7 +41,6 @@ class DES_stepper {
 
 	private:
  
-		T propvecx; 
 		int Nvars; // Total number of variables  
 		int Npop;  // Population 
 
@@ -75,8 +74,6 @@ DES_stepper<T>::DES_stepper(const int &_Nvars, const int &_Npop):Nvars (_Nvars),
 	std::uniform_int_distribution<>::param_type newParams2(0, Npop-1);
 	dis_int.param(newParams2);
 			
-	// Set up proper size of proposed vector, and gamma step 	
-	propvecx.Vars.resize(Nvars); 
 
 }
 
@@ -85,6 +82,10 @@ DES_stepper<T>::DES_stepper(const int &_Nvars, const int &_Npop):Nvars (_Nvars),
 template <class T>
 T DES_stepper<T>::propose(std::vector<T> &X, int &j) 
 	{
+	
+	T propvecx; 
+	propvecx.Vars.resize(Nvars); 
+
 	int R1,R2; 
 	do{
 		R1=dis_int(gen);
