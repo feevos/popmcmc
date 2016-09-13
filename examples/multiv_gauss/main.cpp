@@ -110,7 +110,7 @@ int main(){
 	mult_gaussian logP(weights,sigmas,means);
 	
 	
-	mcmc::popmcmc<mult_gaussian> mysampler(logP,PriorRange);
+	mcmc::popmcmc<mult_gaussian> mysampler(logP,PriorRange,2);
 
 	//mysampler.set_algo(mcmc::PCX);
 	//mysampler.set_algo(mcmc::GW_Stretch);
@@ -148,6 +148,7 @@ int main(){
 
 
 	
+/*
 	// -------------------------------------------------------------------------------------------------------+
 	//													//|
 	//	Constructing custom stepper: 									//|
@@ -176,7 +177,7 @@ int main(){
 	mysampler.set_algo(&myalgo);											//|
 															//|
 	// -------------------------------------------------------------------------------------------------------+
-
+*/
 
 
 	

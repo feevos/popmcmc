@@ -14,7 +14,7 @@ class ros_logP{
 			vector<double> theta = X.Vars; 
 			return
         	        // In this example Rosenbrock density. 
-                	-(100.0*pow(theta[1]- pow(theta[0],2),2) + pow(1.- theta[0],2) )/20.0;
+                	-(100.0*pow(theta[1]- pow(theta[0],2) ,2) + pow(1.- theta[0],2) )/20.0;
 	}
 };
 
@@ -25,15 +25,15 @@ int main(){
 
 	int Npop=1000;
 	int Nvars=2;
-	int Nsample=1000; 
+	int Nsample=2000; 
 
 
 	vector<vector<double> > PriorRange(Nvars); 
 	for (auto i=0; i < Nvars; ++i)
 		{
 		PriorRange[i].resize(2); 
-		PriorRange[i][0]=-6.0; 
-		PriorRange[i][1]= 6.0; 
+		PriorRange[i][0]=-30.0; 
+		PriorRange[i][1]= 30.0; 
 		}
 
 	ros_logP logP;
@@ -42,13 +42,14 @@ int main(){
 	mcmc::popmcmc<ros_logP> mysampler(logP,PriorRange);
 
 
+
 	// Available methods, 
 
 // ------------- Standard samplers -- must be combined with standard init functions (i.e. non - tempered). 
 
-	mysampler.set_algo(mcmc::GW_Stretch);
+	//mysampler.set_algo(mcmc::GW_Stretch);
 	//mysampler.set_algo(mcmc::DE);
-	//mysampler.set_algo(mcmc::DES);
+	mysampler.set_algo(mcmc::DES);
 	//mysampler.set_algo(mcmc::PCX);
 
 	// Characteristic init functions. See file mcmc.hpp for all constructors.  
@@ -62,16 +63,20 @@ int main(){
 	//mysampler.set_algo(mcmc::PCX_PT);
 	
 	// Characteristic init functions. 10: dimension of temperatures, 30: Nswap, propose swap every Nswap iterations. 
-	//mysampler.init(Npop,10,30);  
+	//mysampler.init(Npop,20,30);  
 // ------------------------------------------------------------------------------------------	
 
 
 	// Set filename for output. 
 	//string flname_out = "caramba_PCX"; 
 	//string flname_out = "caramba_PCX_PT"; 
-	string flname_out = "caramba_GWS_PT"; 
+	//string flname_out = "caramba_GWS_1"; 
+	//string flname_out = "caramba_GWS_8_Pt"; 
 	//string flname_out = "caramba_GWS"; 
-	//string flname_out = "caramba_DES"; 
+	//string flname_out = "caramba_DES_8_shuffle"; 
+	//string flname_out = "caramba_GWS_8_shuffle"; 
+	string flname_out = "caramba_DES_8"; 
+	//string flname_out = "caramba_DES_PT_1"; 
 	//string flname_out = "caramba_DE"; 
 	//string flname_out = "caramba_DE_PT"; 
 	//string flname_out = "caramba_DES_PT"; 

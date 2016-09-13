@@ -1,6 +1,8 @@
 # popmcmc++
 Population mcmc c++ library.
 
+**Beta testing mode - under development**
+
 This is a population mcmc c++ library. It incorporates 4 algorithms, 3 reliable and tested and one experimental. 
 Tested algorithms: DE,DES based on differential evolution- Braak et al. (2006), Streens 2002 -  
 and GWS (Goodman and Weare 2010), the stretch move.  
