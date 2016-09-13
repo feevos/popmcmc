@@ -32,8 +32,8 @@ int main(){
 	for (auto i=0; i < Nvars; ++i)
 		{
 		PriorRange[i].resize(2); 
-		PriorRange[i][0]=-30.0; 
-		PriorRange[i][1]= 30.0; 
+		PriorRange[i][0]=-100.0; 
+		PriorRange[i][1]= 100.0; 
 		}
 
 	ros_logP logP;
@@ -47,32 +47,32 @@ int main(){
 
 // ------------- Standard samplers -- must be combined with standard init functions (i.e. non - tempered). 
 
-	mysampler.set_algo(mcmc::GW_Stretch);
+	//mysampler.set_algo(mcmc::GW_Stretch);
 	//mysampler.set_algo(mcmc::DE);
 	//mysampler.set_algo(mcmc::DES);
 	//mysampler.set_algo(mcmc::PCX);
 
 	// Characteristic init functions. See file mcmc.hpp for all constructors.  
-	mysampler.init(Npop);   
+	//mysampler.init(Npop);   
 // -------------------------------------------------------------------------------------------
 	
 // ---------------- Parallel Tempering algorithms --------------------------------------------
 	//mysampler.set_algo(mcmc::GW_Stretch_PT);
 	//mysampler.set_algo(mcmc::DE_PT);
 	//mysampler.set_algo(mcmc::DES_PT);
-	//mysampler.set_algo(mcmc::PCX_PT);
+	mysampler.set_algo(mcmc::PCX_PT);
 	
 	// Characteristic init functions. 10: dimension of temperatures, 30: Nswap, propose swap every Nswap iterations. 
-	//mysampler.init(Npop,20,30);  
+	mysampler.init(Npop,10,30);  
 // ------------------------------------------------------------------------------------------	
 
 
 	// Set filename for output. 
 	//string flname_out = "caramba_PCX"; 
-	//string flname_out = "caramba_PCX_PT"; 
-	string flname_out = "caramba_GWS_8"; 
+	string flname_out = "caramba_PCX_PT"; 
+	//string flname_out = "caramba_PCX_PT_8"; 
 	//string flname_out = "caramba_GWS_8_Pt"; 
-	//string flname_out = "caramba_GWS"; 
+	//string flname_out = "caramba_GWS_1"; 
 	//string flname_out = "caramba_DES_8_shuffle"; 
 	//string flname_out = "caramba_GWS_8_shuffle"; 
 	//string flname_out = "caramba_DES_8"; 
