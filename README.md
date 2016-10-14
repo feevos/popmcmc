@@ -14,7 +14,7 @@ Dependencies: intel TBB.
 
 The library is fully parallelized using intel TBB library. There is the option of selecting maximum number of threads (TBB actually decides how many will use), or running in single thread mode, without the use of TBB.  
 
-Jumping in the examples directory should get you started easily. There is a walkthrough example in the wik. The algorithm outputs variable chains and last column has loglikelihood values. Start with example Rosenbrock, it's better documented than others. Example multiv_gaussian has also an experimental implementation of combo stepper, that *needs debugging* (on my TODO list), *avoid using* it. 
+Jumping in the examples directory should get you started easily. There is a walkthrough example in the wiki. The algorithm outputs variable chains and last column has loglikelihood values. Start with example Rosenbrock, it's better documented than others. Example multiv_gaussian has also an experimental implementation of combo stepper, that *needs debugging* (on my TODO list), *avoid using* it. 
 
 
 compile: g++ -std=c++14 main.cpp -o main -ltbb -O3 
